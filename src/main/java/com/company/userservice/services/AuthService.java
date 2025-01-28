@@ -1,5 +1,6 @@
 package com.company.userservice.services;
 
+import com.company.userservice.models.Role;
 import com.company.userservice.models.User;
 import com.company.userservice.repos.UserRepo;
 import exceptions.UserAlreadyExistException;
@@ -28,6 +29,8 @@ public class AuthService implements IAuthService {
         user.setPassword(password);
         user.setCreatedAt(new Date());
         user.setLastUpdatedAt(new Date());
+        Role role = new Role();
+        role.setValue("USER");
         userRepo.save(user);
         return user;
     }
