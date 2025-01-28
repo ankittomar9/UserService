@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,9 +15,9 @@ public class User extends BaseModel {
     private String email;
     private String password;
     //Userid will be fetched from BaseModel
-//    Relation between user and role  cardinality
+//    Relation between user and role  --- cardinality
          @ManyToMany
-        private  List<Role> roles = new ArrayList<>(); // initialize with null or empty values
+        private  List<Role> roles = new ArrayList(); // initialize with null or empty values
 
 }
 //user   role
