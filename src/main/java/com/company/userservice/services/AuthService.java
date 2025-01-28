@@ -7,7 +7,9 @@ import exceptions.UserAlreadyExistException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -29,8 +31,13 @@ public class AuthService implements IAuthService {
         user.setPassword(password);
         user.setCreatedAt(new Date());
         user.setLastUpdatedAt(new Date());
-        Role role = new Role();
-        role.setValue("USER");
+         Role role = new Role();
+        role.setValue("CUSTOMER");
+
+        //Saving roles giving user  a default role
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        user.setRoles(roles);
         userRepo.save(user);
         return user;
     }
