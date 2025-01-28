@@ -35,7 +35,7 @@ public class AuthController {
     }
     @PostMapping("login")
     public UserDto login(@RequestBody LoginRequest loginRequest){
-
+        return null;
     }
 
 }
