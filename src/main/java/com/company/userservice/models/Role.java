@@ -9,7 +9,8 @@ import lombok.Setter;
 @Entity
 public class Role extends BaseModel {
 
-    // because roles can be extensible A organisation can have so many roles
+    // because roles can be extensible
+    // A organisation can have so many roles
     private String value;
 
 }
