@@ -1,5 +1,7 @@
 package com.company.userservice.services;
 
+import com.company.userservice.exceptions.PasswordMismatchException;
+import com.company.userservice.exceptions.UserNotRegisteredException;
 import com.company.userservice.models.Role;
 import com.company.userservice.models.User;
 import com.company.userservice.repos.UserRepo;
@@ -42,7 +44,15 @@ public class AuthService implements IAuthService {
     }
 
     @Override
-    public User login(String email, String password) {
-        return null;
+    public User login(String email, String password) throws UserNotRegisteredException, PasswordMismatchException {
+        Optional<User> userOptional=userRepo.findByEmail(email);
+        if(userOptional.isEmpty()){
+            throw new UserNotRegisteredException("Please signup first.....");
+        }
+        String storedPassword = userOptional.get().getPassword();
+        if(!password.equals(storedPassword)){
+            throw new PasswordMismatchException("Please add correct password......");
+        }
+        return userOptional.get();
     }
 }
