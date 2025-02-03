@@ -13,7 +13,8 @@ import java.util.Date;
 @MappedSuperclass
 public abstract class BaseModel {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // automatically increment
+    // the id auto does not do that it figures best by scanning the DB and select appropriate
     private Long id;  // UUID can also be implemented
     private Date createdAt;
     private Date lastUpdatedAt;

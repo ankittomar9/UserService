@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
@@ -24,18 +23,28 @@ public class AuthController {
     //User dto is return because resource what is created should same be return
     // and we are returning user dto and not user object because we don't want to show the password
     @PostMapping("/signup")
-    public UserDto signup(@RequestBody SignupRequest signupRequest){
+    public ResponseEntity<UserDto>  signup(@RequestBody SignupRequest signupRequest){
       try{
           User user = authService.signup(signupRequest.getEmail(),signupRequest.getPassword());
+          return new ResponseEntity<>(from(user), HttpStatus.CREATED);
       }catch (UserAlreadyExistException exception){
           return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
       }
 
 
     }
-    @PostMapping("login")
+
+    @PostMapping("/login")
     public UserDto login(@RequestBody LoginRequest loginRequest){
         return null;
+    }
+
+    public UserDto from (User user){
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setEmail(user.getEmail());
+        userDto.setRoles(user.getRoles());
+        return userDto;
     }
 
 }
