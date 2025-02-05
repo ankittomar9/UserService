@@ -3,6 +3,8 @@ package com.company.userservice.controllers;
 import com.company.userservice.dtos.LoginRequest;
 import com.company.userservice.dtos.SignupRequest;
 import com.company.userservice.dtos.UserDto;
+import com.company.userservice.exceptions.PasswordMismatchException;
+import com.company.userservice.exceptions.UserNotRegisteredException;
 import com.company.userservice.models.User;
 import com.company.userservice.services.IAuthService;
 import exceptions.UserAlreadyExistException;
@@ -35,8 +37,15 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public UserDto login(@RequestBody LoginRequest loginRequest){
-        return null;
+    public ResponseEntity<UserDto> login(@RequestBody LoginRequest loginRequest){
+       try{
+           User user=authService.login(loginRequest.getEmail(), loginRequest.getPassword());
+           return new ResponseEntity<>(from(user), HttpStatus.OK);
+       }catch(UserNotRegisteredException exception){
+            return new ResponseEntity<>(null, HttpStatus.NOT_FOUND);
+        }catch(PasswordMismatchException exception){
+         return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
+       }
     }
 
     public UserDto from (User user){

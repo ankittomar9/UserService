@@ -1,5 +1,6 @@
 package com.company.userservice.models;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToMany;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class User extends BaseModel {
     private String password;
     //Userid will be fetched from BaseModel
 //    Relation between user and role  --- cardinality
-         @ManyToMany
+         @ManyToMany(cascade = CascadeType.ALL)
         private  List<Role> roles = new ArrayList(); // initialize with null or empty values avoid null values
     //roles can be very extensive
 
