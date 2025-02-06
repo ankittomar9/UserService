@@ -9,6 +9,7 @@ import com.company.userservice.models.User;
 import com.company.userservice.repos.SessionRepo;
 import com.company.userservice.repos.UserRepo;
 import exceptions.UserAlreadyExistException;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.MacAlgorithm;
@@ -103,8 +104,6 @@ public class AuthService implements IAuthService {
         session.setUser(UserOptional.get());
         session.setStatus(Status.ACTIVE);
         SessionRepo.save(session);
-
-
         return new Pair<User,String>(userOptional.get(),token);
 
 
@@ -121,15 +120,30 @@ public class AuthService implements IAuthService {
 // -> get expiry.
 //}
 
-public Boolean validateToken(String token,Long userId){
-        Optional<Session> optionalSession=sessionRepo.findByTokenAndUser_Id(token,userId);
-        if(optionalSession.isEmpty()){
-            return false;
-        }
-        String token =optionalSession.get().getToken();
-    JwtParser jwtParser=Jwts.parser().verifyWith()
+public Boolean validateToken(String token,Long userId) {
+    Optional<Session> optionalSession = sessionRepo.findByTokenAndUser_Id(token, userId);
+    if (optionalSession.isEmpty()) {
+        return false;
+    }
+    String persistedToken = optionalSession.get().getToken();
+    JwtParser jwtParser = Jwts.parser().verifyWith(secretKey).build();
+    Claims claims = jwtParser.parseSignedClaims(token).getPayload();
+
+    Long tokenExpiry = (Long) claims.get("exp");
+    Long currentTime = System.currentTimeMillis();
+
+    System.out.println(tokenExpiry);
+    System.out.println(currentTime);
+
+    if (currentTime > tokenExpiry) {
+        Session session=optionalSession.get();
+        session.setStatus(Status.INACTIVE);
+        sessionRepo.save(session);
+        return false;
+    }
+    return true;
+    }
 
 }
 
 
-}
