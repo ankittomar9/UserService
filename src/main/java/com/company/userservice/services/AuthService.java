@@ -35,7 +35,7 @@ public class AuthService implements IAuthService {
         private SessionRepo sessionRepo;
 
         @Autowired
-        @private SecretKey secretKey;
+        private SecretKey secretKey;
 
     @Override
     public User signup(String email, String password) throws UserAlreadyExistException {
@@ -101,16 +101,12 @@ public class AuthService implements IAuthService {
 
         Session session=new Session();
         session.setToken(token);
-        session.setUser(UserOptional.get());
+        session.setUser(userOptional.get());
         session.setStatus(Status.ACTIVE);
-        SessionRepo.save(session);
+        sessionRepo.save(session);
+
         return new Pair<User,String>(userOptional.get(),token);
-
-
     }
-
-
-}
 
 //validateToken(userId, token) {
 // check if token stored in db is matching with this token or not

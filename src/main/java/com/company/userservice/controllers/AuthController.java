@@ -3,7 +3,9 @@ package com.company.userservice.controllers;
 import com.company.userservice.dtos.LoginRequest;
 import com.company.userservice.dtos.SignupRequest;
 import com.company.userservice.dtos.UserDto;
+import com.company.userservice.dtos.ValidateTokenDto;
 import com.company.userservice.exceptions.PasswordMismatchException;
+import com.company.userservice.exceptions.UnAuthorizedException;
 import com.company.userservice.exceptions.UserNotRegisteredException;
 import com.company.userservice.models.User;
 import com.company.userservice.services.IAuthService;
@@ -52,6 +54,15 @@ public class AuthController {
         }catch(PasswordMismatchException exception){
          return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST);
        }
+    }
+
+    @PostMapping("/validateToken")
+    public Boolean validateToken(@RequestBody ValidateTokenDto validateTokenDto) throws UnAuthorizedException {
+        Boolean result =authService.validateToken(validateTokenDto.getToken(),validateTokenDto.getUserId());
+        if(result==false){
+            throw new UnAuthorizedException("Please login again , Inconvenience Regretted");
+        }
+        return  result;
     }
 
     public UserDto from (User user){
